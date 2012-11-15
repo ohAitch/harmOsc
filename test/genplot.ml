@@ -6,7 +6,7 @@ let repeat n f x =
     List.rev (make_list n f x);; (*Still looking for a primitve*) 
 let model ?(delta = 1e-4) ?(z0 = 0.) ?(k = 1.) ?(mu = -. 1e-3) ?(points = 50000) init_val = 
   let t_prime (z, v, a) = 
-    (z +. delta *. v , v +. delta *. a, mu *. ((z -. z0) *. -. k) )
+    (z +. delta *. v , v +. delta *. a, ((z -. z0) *. -. k) )
   in repeat points t_prime [init_val, delta, 0.];;
 let e_and_p ?(k = 1.) vals =
 let reversed, _, _ = List.fold_left (
