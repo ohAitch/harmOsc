@@ -16,13 +16,12 @@ let reversed, _, _ = List.fold_left (
         else ((e, nan)::acc, x, i +. 1.)) ([], 0., 1.) vals
 in List.rev reversed;;
 let out = open_out("Surface") in
-fprintf out "Springiness Friction log(scale)\n";
 for iter = 1 to 50 do
   for jter = 1 to 50 do
-    let k = 10.**((float iter) /. 30. +. 3.) and mu =  -24. *. (float jter) and pts = 10000 in
+    let k = 1000. *. (float iter) and mu =  -24. *. (float jter) and pts = 10000 in
            let l = (e_and_p ~k:k (model ~k:k ~mu:mu ~points:pts 10.)) in
              let (init, _), (mid, _), (fin, _) = List.hd l, List.nth l (pts / 2), List.nth l pts in (*Unpack energy points*)
                if fin = fin (*NaN check*) then
-	       let growth = init /. fin in let err = mid /. fin -. sqrt growth in
-	         fprintf out "%f %f %f %f\n" k mu growth err 
+	       let growth = init /. fin in (*let err = (mid /. fin)**2. -. growth in*)
+	         fprintf out "%f %f %f\n" k mu (log growth)
 done done;;
