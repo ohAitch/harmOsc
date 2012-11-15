@@ -17,12 +17,13 @@ let reversed, _, _ = List.fold_left (
 in List.rev reversed;;
 Random.init 53;;
 let r n = 10.**(Random.float n) in
-  let delta = r (-4.) and mu = -. 0.5 and pts = int_of_float (1000. *. r 2.) and amp = r 2. in
-for iter = 1 to 50 do
-  let k = exp((float iter) /. 7.) in
-    let out = open_out(sprintf "Sim%02d" iter) in
-      fprintf out "#k = %g, Δ = %.1g, μ = %.1g\n" k delta mu;
-      fprintf out "Energy Frequency\n";
-        List.iter (fun (e, p) -> fprintf out "%f %f\n" e (float pts /. p))
-          (e_and_p ~k:k (model ~k:k ~delta:delta ~mu:mu ~points:pts amp)); close_out out
-done;;
+  let delta = r (-4.) and pts = int_of_float (1000. *. r 2.) and amp = r 2. in
+for iter = 1 to 5 do
+  for jter = 1 to 5 do
+    let k = 10.**((float iter) /. 2.) and mu = 10.**(-. (float jter) /. 10.) in
+      let out = open_out(sprintf "Sim%d-%d" iter jter) in
+        fprintf out "#k = %g, Δ = %.1g, μ = %.1g\n" k delta mu;
+        fprintf out "Energy Frequency\n";
+          List.iter (fun (e, p) -> fprintf out "%f %f\n" e (float pts /. p))
+            (e_and_p ~k:k (model ~k:k ~delta:delta ~mu:mu ~points:pts amp)); close_out out
+done done;;
