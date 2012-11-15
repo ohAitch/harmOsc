@@ -1,0 +1,14 @@
+(*let Δ = 0.000123254 and z0 = 0. and k = 1.26405 and step = 1 and pts = 100 and amp=9.1552;;*)
+
+open Printf;;
+let rec repeat n f x = if n==1 then f x else f (repeat (n-1) f x) and (* Please tell me there's a primitive for this *)
+  add_point f = function | head::_ as data -> (f head)::data | [] -> raise (Invalid_argument "No starting point given.") (* Likewise *);;
+let model ?(Δ = 1e-4) ?(z0 = 0.) ?(k = 1.) ?(step = 500) ?(points = 1000) init_val = 
+  let t′ (z, v, a) =  let v′ = v +. Δ *. a in (z +. Δ *. (v +. v′) /. 2.1, v′, (z -. z0) *. -.k ) in
+  repeat points (add_point (repeat step t′)) [init_val, 0., 0.];;
+Random.init 12; 
+let r n = exp(Random.float n) in
+  for iter = 1 to 50 do
+    let k = r 7. and Δ = r (-12.) and pts = int_of_float (100. *. r 6.) and  step = int_of_float (10. *. r 4.) and amp = r 3. in
+      let out = open_out(sprintf "Sim%02d:k=%g__delta=%g__%d_points_%d_steps_each__starting_at_%g.data" iter k Δ pts step amp) in
+      List.iter (fun (z, v, _) -> fprintf out "%f %f\n" z v) (List.rev (model ~k:k ~Δ:Δ ~step:step ~points:pts amp)) done ;;

@@ -1,0 +1,11 @@
+        Objective Caml version 3.11.2
+
+#     #   val repeat : int -> ('a -> 'a) -> 'a -> 'a = <fun>
+val add_point : ('a -> 'a) -> 'a list -> 'a list = <fun>
+#     val model :
+  ?delta:float ->
+  ?z0:float ->
+  ?k:float ->
+  ?step:int -> ?points:int -> float -> (float * float * float) list = <fun>
+#           - : unit = ()
+# 
