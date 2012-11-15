@@ -17,7 +17,7 @@ let reversed, _, _ = List.fold_left (
 in List.rev reversed;;
 Random.init 53;;
 let r n = 10.**(Random.float n) in
-  let delta = r (-4.) and mu = 1 -. r (-1.) and pts = int_of_float (1000. *. r 2.) and amp = r 2. in
+  let delta = r (-4.) and mu = 1. -. r (-1.) and pts = int_of_float (1000. *. r 2.) and amp = r 2. in
 for iter = 1 to 50 do
   let k = exp((float iter) /. 7.) in
     let out = open_out(sprintf "Sim%02d" iter) in
