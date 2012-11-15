@@ -21,7 +21,8 @@ for iter = 1 to 50 do
   for jter = 1 to 50 do
     let k = 10.**((float iter) /. 30. +. 3.) and mu =  -24. *. (float jter) and pts = 10000 in
            let l = (e_and_p ~k:k (model ~k:k ~mu:mu ~points:pts 10.)) in
-             let (init, _), (fin, _) = List.hd l, List.hd (List.rev l) in (*Unpack initial and final energy*)
+             let (init, _), (mid, _), (fin, _) = List.hd l, List.nth l (pts / 2), List.nth l pts in (*Unpack energy points*)
                if fin = fin (*NaN check*) then
-	         fprintf out "%f %f %f\n" k mu (log (init /. fin)) 
+	       let growth = init /. fin in let err = mid /. fin -. sqrt growth in
+	         fprintf out "%f %f %f %f\n" k mu growth err 
 done done;;
