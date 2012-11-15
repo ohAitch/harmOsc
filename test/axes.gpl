@@ -1,5 +1,6 @@
 set key autotitle columnhead
 set ytics nomirror tc lt 1
+set logscale y
 set y2tics tc lt 2
 set y2range [0:*]
-set yrange [0:*]
+set yrange [1:*]

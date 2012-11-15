@@ -17,9 +17,9 @@ let reversed, _, _ = List.fold_left (
 in List.rev reversed;;
 for iter = 1 to 5 do
   for jter = 1 to 5 do
-    let k = 10.**((float iter) /. 3. +. 2.) and mu =  -12. /. (float jter) and pts = 10000 in
+    let k = 10.**((float iter) /. 3. +. 3.) and mu =  -120. /. (float jter) and pts = 10000 in
       let out = open_out(sprintf "Sim%d-%d" iter jter) in
-        fprintf out "#k = %g, μ = %.1g\n" k mu;
+        fprintf out "#k = %g, μ = %g\n" k mu;
         fprintf out "Energy Frequency\n";
           List.iter (fun (e, p) -> fprintf out "%f %f\n" e (float pts /. p))
             (e_and_p ~k:k (model ~k:k ~mu:mu ~points:pts 10.)); close_out out
