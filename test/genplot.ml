@@ -6,7 +6,7 @@ let repeat n f x =
     List.rev (make_list n f x);; (*Still looking for a primitve*) 
 let model ?(delta = 1e-4) ?(z0 = 0.) ?(k = 1.) ?(mu = -. 1e-3) ?(points = 50000) init_val = 
   let t_prime (z, v, a) = 
-    (z +. delta *. v , v +. delta *. a, mu *. ((z -. z0) *. k) )
+    (z +. delta *. v , v +. delta *. a, mu *. ((z -. z0) *. -. k) )
   in repeat points t_prime [init_val, delta, 0.];;
 let e_and_p ?(k = 1.) vals =
 let reversed, _, _ = List.fold_left (
@@ -19,7 +19,7 @@ Random.init 53;;
 let r n = 10.**(Random.float n) in
   let delta = r (-4.) and mu = 1. -. r (-1.) and pts = int_of_float (1000. *. r 2.) and amp = r 2. in
 for iter = 1 to 50 do
-  let k = exp((float iter) /. 5. -. 3.) in
+  let k = exp((float iter) /. 7.) in
     let out = open_out(sprintf "Sim%02d" iter) in
       fprintf out "#k = %g, Δ = %.1g, μ = %.1g\n" k delta mu;
       fprintf out "Energy Frequency\n";
