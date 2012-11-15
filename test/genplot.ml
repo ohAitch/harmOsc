@@ -17,10 +17,10 @@ let reversed, _, _ = List.fold_left (
 in List.rev reversed;;
 Random.init 53;;
 let r n = 10.**(Random.float n) in
-  let delta = r (-4.) and pts = int_of_float (1000. *. r 2.) and amp = r 2. in
+  let delta = r (-4.) and pts = 10000 and amp = r 2. in
 for iter = 1 to 5 do
   for jter = 1 to 5 do
-    let k = 10.**((float iter) /. 2.) and mu = -. (10.**(-0.2 /. (float jter)) )in
+    let k = 10.**((float iter) /. 3. +. 2.) and mu =  -12. /. (float jter) in
       let out = open_out(sprintf "Sim%d-%d" iter jter) in
         fprintf out "#k = %g, Δ = %.1g, μ = %.1g\n" k delta mu;
         fprintf out "Energy Frequency\n";
