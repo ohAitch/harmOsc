@@ -8,20 +8,21 @@ let model ?(delta = 1e-3) ?(z0 = 0.) ?(k = 1.) ?(mu = -. 1e-3) ?(points = 50000)
   let t_prime (z, v, a) = 
     (z +. delta *. v , v +. delta *. a, mu *. v -. ((z -. z0) *. k) )
   in repeat points t_prime [init_val, delta, 0.];;
-let e_and_p ?(k = 1.) vals =
+let period vals =
 let reversed, _, _ = List.fold_left (
-  fun (acc, sign, i) (x,v, _) ->
-    let e = k*.x**2. +. v**2. in
-      if sign *. x < 0. || x = 0. then ((e, i)::acc, x, 1.)
-        else ((e, nan)::acc, x, i +. 1.)) ([], 0., 1.) vals
+  fun (acc, sign, i) (_, v, _) ->
+      if sign *. v < 0. || v = 0. then (i::acc, v, 1.)
+        else (acc, v, i +. 1.))
+  ([], 0., 1.) vals
 in List.rev reversed;;
+let energy ?(k = 1.) (x, v, _) = k*.x**2. +. v**2.;; 
 let out = open_out("Surface") in
 for iter = 1 to 50 do
   for jter = 1 to 50 do
     let k = 1000. *. (float iter) and mu =  -24. *. (float jter) and pts = 10000 in
-           let l = (e_and_p ~k:k (model ~k:k ~mu:mu ~points:pts 10.)) in
-             let (init, _), (mid, _), (fin, _) = List.hd l, List.nth l (pts / 2), List.nth l pts in (*Unpack energy points*)
-               if fin = fin (*NaN check*) then
-	       let growth = init /. fin in (*let err = (mid /. fin)**2. -. growth in*)
-	         fprintf out "%f %f %f\n" k mu (log growth)
+      let l = (model ~k:k ~mu:mu ~points:pts 10.) in
+         let init, fin = energy ~k:k (List.hd l), energy ~k:k (List.hd (List.rev l)) in (*Calculate initial/final energy*)
+            (*if fin = fin (*NaN check*) then*)
+                let growth = init /. fin in (*let err = (mid /. fin)**2. -. growth in*)
+                  fprintf out "%f %f %f\n" k mu growth
 done done;;
