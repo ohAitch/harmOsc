@@ -17,11 +17,11 @@ let reversed, _, _ = List.fold_left (
 in List.rev reversed;;
 let energy ?(k = 1.) (x, v, _) = k*.x**2. +. v**2.;; 
 let out = open_out("Surface") in
-for iter = 1 to 50 do
-  for jter = 1 to 50 do
-    let k = 1000. *. (float iter) and mu =  -800. -. 8. *. (float jter) and delta, pts = 1e-3, 10000 in
-      let l = (model ~k:k ~mu:mu ~delta:delta ~points:pts 10.) in
+for iter = 1 to 250 do
+    let k = 10. *. (float iter) and mu =  -5. and time, pts = 10., 10000 in
+      let l = (model ~k:k ~mu:mu ~delta:(time /. float pts) ~points:pts 10.) in
          let init, fin = energy ~k:k (List.hd l), energy ~k:k (List.hd (List.rev l)) in (*Extract initial/final energy*)
-            let growth = init /. fin and frequency = float (List.length (period l)) /. (float pts *. delta) in 
+            let growth = init /. fin and
+                frequency = float (List.length (period l)) /. time in 
                fprintf out "%f %f %f %f\n" k mu ((log growth) /. k) frequency
-done done;;
+done ;;
