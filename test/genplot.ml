@@ -23,5 +23,5 @@ for iter = 1 to 25 do
          let init, fin = energy ~k:k (List.hd l), energy ~k:k (List.hd (List.rev l)) in (*Extract initial/final energy*)
             let growth = fin /. init and
                 frequency = (period l)** -1. /. delta in 
-               fprintf out "%f %f %f %f\n" k mu growth (frequency /. (k ** 0.5))
+               fprintf out "%f %f %f %f\n" k (-. mu) growth (frequency /. (k ** 0.5))
 done ;;
