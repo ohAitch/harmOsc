@@ -10,11 +10,11 @@ let model ?(delta = 1e-4) ?(z0 = 0.) ?(k = 1.) ?(mu = -. 1e-3) ?(points = 50000)
   in repeat points t_prime [init_val, delta, 0.];;
 let period vals =
 let intervals, _, _ = List.fold_left (
-  fun (acc, sign, i) (_, v, _) ->
-      if sign *. v < 0. then (i::acc, v, 1.) else (acc, v, i +. 1.))
-  ([], nan, 0.) vals
+  fun (acc, prev, i) (_, v, _) ->
+      if prev <= 0. && v > 0. then (i::acc, v, 1.) else (acc, v, i +. 1.))
+  ([], nan, 1.) vals
 and avg l = (List.fold_left ( +. ) 0. l) /. float (List.length l)
-in avg intervals ;;
+in avg intervals;;
 let energy ?(k = 1.) ?(m = 1.) (x, v, _) = 0.5 *. (k*.x**2. +. m*.v**2.);; 
 let out = open_out("Surface") in
 for iter = 1 to 25 do
