@@ -18,10 +18,10 @@ in avg intervals;;
 let energy ?(k = 1.) ?(m = 1.) (x, v, _) = 0.5 *. (k*.x**2. +. m*.v**2.);; 
 let out = open_out("Surface") in
 for iter = 1 to 25 do
-    let k = 1. and mu = (float iter) *. -0.01 and delta, pts = 1e-4, 100000 in
+    let k = (float iter) /. 2. and mu = -0.2 and delta, pts = 1e-3, 80000 in
       let l = (model ~k:k ~mu:mu ~delta:delta ~points:pts 10.) in
          let init, fin = energy ~k:k (List.hd l), energy ~k:k (List.hd (List.rev l)) in (*Extract initial/final energy*)
             let growth = fin /. init and
                 frequency = (period l)** -1. /. delta in 
-               fprintf out "%f %f %f %f\n" k (-. mu) growth (frequency /. (k ** 0.5))
+              fprintf out "%f %f %f %f\n" k (-. mu) growth (frequency /. (k ** 0.5))
 done ;;
