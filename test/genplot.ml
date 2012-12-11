@@ -17,13 +17,15 @@ and avg l = (List.fold_left ( +. ) 0. l) /. float (List.length l)
 in avg intervals;;
 let energy ?(k = 1.) ?(m = 1.) (x, v, _) = 0.5 *. (k*.x**2. +. m*.v**2.);; 
 let out = open_out("Model") in
-  let k = 50. and mu = -0.01 and delta, pts, m = 1e-4, 100000, 1e-2 in
+ for iter = 1 to 25 do
+  let k = 3. *. (float iter) and mu = -0.01 and delta, pts, m = 1e-5, 100000, 1e-2 in
     let l = (model ~k:k ~mu:mu ~delta:delta ~points:pts ~m:m 10.) in
        let data = List.rev_map (fun (t, datum) -> t, datum, energy ~k:k ~m:m datum) l in
           let (_, _, init), (_, _, fin) = (List.hd data), (List.hd (List.rev data)) in (*Extract initial/final energy*)
           let growth = fin /. init and
               frequency = (period l)** -1. /. delta and
               time = (float pts) *. delta in 
-            fprintf out "#m:%f k:%f mu:%f Half-Life:%f Freq:%f\n" k m (-. mu) (-. time /. (log growth /. log 2.)) frequency;
-            fprintf out "Time Position Velocity Energy\n";
-            List.iter (fun (t, (z,v,_), e) -> fprintf out "%f %f %f %f\n" t z v e) data;;
+            fprintf out "k m mu Half-Life Freq\n";
+            fprintf out "%f %f %f %f %f\n" k m (-. mu) (-. time /. (log growth /. log 2.)) frequency
+            (*fprintf out "Time Position Velocity Energy\n";
+            List.iter (fun (t, (z,v,_), e) -> fprintf out "%f %f %f %f\n" t z v e) data;;*) done;;
